@@ -39,7 +39,7 @@ const myMap = {
 
 // get coordinates using geolocation api
 async function getCoordinates(){
-    const position = await new Promise((resolve, reject) => {
+    let position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     });
     return [position.coords.latitude, position.coords.longitude]
@@ -57,10 +57,11 @@ async function getFoursquare(business) {
     let limit = 5
     let lat = myMap.coordinates[0]
     let lon = myMap.coordinates[1]
+
     let response = await fetch(`https://api.foursquare.com/v3/places/search?&query=${business}&limit=${limit}&ll=${lat}%2C${lon}`, options)
-    let data = await response.text()
-    let parsedData = JSON.parse(data)
-    let businesses = parsedData.results
+    let responseData = await response.text()
+    let data = JSON.parse(responseData)
+    let businesses = data.results
     return businesses
 }
 // process foursquare array
